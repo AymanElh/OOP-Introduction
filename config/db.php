@@ -39,7 +39,7 @@ class Database {
         return $this->conn;
     }
 
-    static function insertRecord($table, $data) {
+    static function insertRecord($mysqli, $table, $data) {
         // Use prepared statements to prevent SQL injection
         $columns = implode(',', array_keys($data));
         $values = implode(',', array_fill(0, count($data), '?'));
@@ -51,9 +51,18 @@ class Database {
         if (!$stmt) {
             die("Error in prepared statement: " . mysqli_error($mysqli));
         }
+
+        $types = "";
+        foreach($data as $value) {
+            if(is_int($value)) {
+                $types .= 'i';
+            } else if (is_string($value)) {
+                $types .= 's';
+            }
+        }
     
         // Bind parameters to the prepared statement
-        $types = str_repeat('s', count($data));
+        // $types = str_repeat('s', count($data));
         $params = array_values($data);
         mysqli_stmt_bind_param($stmt, $types, ...$params);
     
@@ -73,6 +82,7 @@ class Database {
     
         if ($where !== null) {
             $sql .= " WHERE $where";
+            echo $sql;
         }
     
         $stmt = mysqli_prepare($mysqli, $sql);
