@@ -1,11 +1,11 @@
 <?php
 
-require "../vendor/autoload.php";
+// require "../vendor/autoload.php";
 
-use Dotenv\Dotenv;
+// use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
+// $dotenv = Dotenv::createImmutable(dirname(__DIR__));
+// $dotenv->load();
 
 class Database {
     // private $DB_HOST = DB_HOST;
@@ -39,7 +39,7 @@ class Database {
         return $this->conn;
     }
 
-    function insertRecord($table, $data) {
+    static function insertRecord($table, $data) {
         // Use prepared statements to prevent SQL injection
         $columns = implode(',', array_keys($data));
         $values = implode(',', array_fill(0, count($data), '?'));
@@ -67,7 +67,7 @@ class Database {
     }
 
 
-    function selectRecords($mysqli, $table, $columns = "*", $where = null) {
+    static function selectRecords($mysqli, $table, $columns = "*", $where = null) {
         // Use prepared statements to prevent SQL injection
         $sql = "SELECT $columns FROM $table";
     
@@ -93,7 +93,7 @@ class Database {
         return $result;
     }
 
-    function deleteRecord($mysqli, $table, $id) {
+    static function deleteRecord($mysqli, $table, $id) {
         // Use prepared statements to prevent SQL injection
         $sql = "DELETE FROM $table WHERE id = ?";
     
