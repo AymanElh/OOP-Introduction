@@ -20,3 +20,4 @@ $player->rating = 99;
 $player->position = "RW";
 
 // $player->create();
+// $player->delete(24);

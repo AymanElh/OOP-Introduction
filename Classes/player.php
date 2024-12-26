@@ -68,4 +68,14 @@ class Player {
         }    
     }
 
+    function delete($id) {
+        $result = Database::deleteRecord($this->conn, $this->table, $id);
+        if($result) {
+            echo "player deleted successfuly";
+        } else {
+            echo "player does not deleted";
+        }
+    }
+
+
 }
