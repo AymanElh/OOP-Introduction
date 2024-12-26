@@ -124,5 +124,36 @@ class Database {
     
         return $result;
     }
+
+    function updateRecord($mysqli, $table, $data, $id) {
+        // Use prepared statements to prevent SQL injection
+        $args = array();
+    
+        foreach ($data as $key => $value) {
+            $args[] = "$key = ?";
+        }
+    
+        $sql = "UPDATE $table SET " . implode(',', $args) . " WHERE id = ?";
+    
+        $stmt = mysqli_prepare($mysqli, $sql);
+    
+        if (!$stmt) {
+            die("Error in prepared statement: " . mysqli_error($mysqli));
+        }
+    
+        // Bind parameters to the prepared statement
+        $types = str_repeat('s', count($data) + 1);
+        $params = array_values($data);
+        $params[] = $id;
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+    
+        // Execute the prepared statement
+        $result = mysqli_stmt_execute($stmt);
+    
+        // Close the statement
+        mysqli_stmt_close($stmt);
+    
+        return $result;
+    }
 }
 
