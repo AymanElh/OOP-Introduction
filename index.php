@@ -30,4 +30,8 @@ $player->clubName = "AC Milan";
 $player->rating = 99;
 $player->position = "RW";
 
-$player->update(29);
+// $player->update(29);
+
+echo "----------------------------";
+print_r($player->showAllPlayers());
+echo "-----------------------------";   

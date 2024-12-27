@@ -1,7 +1,7 @@
 <?php 
 
-// require_once __DIR__ . "/config/db.php";
-require_once('C:/Users/Youcode/Desktop/Briefs/Brief-9 Fut Champions OOP/config/db.php');
+require_once __DIR__ . "/../config/db.php";
+// require_once('C:/Users/Youcode/Desktop/Briefs/Brief-9 Fut Champions OOP/config/db.php');
 
 class Player {
     private $conn;
@@ -78,7 +78,6 @@ class Player {
     }
 
     function update($id) {
-        $table = "players";
 
         $country_id = $this->getCountryId($this->conn, $this->countryName);
         $club_id = $this->getClubId($this->conn, $this->clubName);
@@ -100,6 +99,12 @@ class Player {
         } else {
             echo "Update failed";
         }
+    }
+
+    function showAllPlayers() {
+        $result = Database::selectRecords($this->conn, $this->table);
+        $allPlayers = mysqli_fetch_all($result);
+        return $allPlayers;
     }
 
 }
