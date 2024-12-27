@@ -25,9 +25,16 @@ class Player {
         $countryID = Database::selectRecords($conn, "countries", "id", $where);
         // echo $countryID;
 
-        if($row = mysqli_fetch_assoc($countryID)) {
-            // echo $row['id'];
-            return $row['id'];
+        // if($row = mysqli_fetch_assoc($countryID)) {
+        //     // echo $row['id'];
+        //     return $row['id'];
+        // } else {
+        //     return NULL;
+        // }
+
+        print_r($countryID);
+        if($countryID) {
+            return $countryID;
         } else {
             return NULL;
         }
@@ -39,9 +46,14 @@ class Player {
         $clubID = Database::selectRecords($conn, "clubs", "id", $where);
         // echo $clubID;
 
-        if($row = mysqli_fetch_assoc($clubID)) {
-            // echo $row['id'];
-            return $row['id'];
+        // if($row = mysqli_fetch_assoc($clubID)) {
+        //     // echo $row['id'];
+        //     return $row['id'];
+        // } else {
+        //     return NULL;
+        // }
+        if($clubID) {
+            return $clubID;
         } else {
             return NULL;
         }
@@ -92,8 +104,8 @@ class Player {
             "position" => $this->position
         ];
 
-        $result = Database::updateRecord($this->conn, $table, $data, $id);
-
+        $result = Database::updateRecord($this->conn, $this->table, $data, $id);
+        print_r($result);
         if($result) {
             echo "Player updated successfuly";
         } else {
@@ -103,8 +115,8 @@ class Player {
 
     function showAllPlayers() {
         $result = Database::selectRecords($this->conn, $this->table);
-        $allPlayers = mysqli_fetch_all($result);
-        return $allPlayers;
+        // $allPlayers = mysqli_fetch_all($result);
+        return $result;
     }
 
 }
