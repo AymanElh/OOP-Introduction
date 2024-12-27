@@ -100,8 +100,6 @@ class Database {
     
         // Execute the prepared statement
         // mysqli_stmt_execute($stmt);
-        echo "<br>";
-        print_r($stmt);
 
         $data = $stmt->fetchAll();  
         // Get the result set
@@ -114,7 +112,6 @@ class Database {
     public static function deleteRecord($pdo, $table, $id) {
         // Use prepared statements to prevent SQL injection
         $sql = "DELETE FROM $table WHERE id = ?";
-        print_r("Delete record: " . $sql . "<br>");
         // $stmt = mysqli_prepare($mysqli, $sql);
         $stmt = $pdo->prepare($sql);
     
@@ -126,7 +123,6 @@ class Database {
         // mysqli_stmt_bind_param($stmt, 'i', $id);
         
         $stmt->bindParam(1, $id, PDO::PARAM_INT);
-        print_r($stmt);
         // Execute the prepared statement
         // $result = mysqli_stmt_execute($stmt);
         $result = $stmt->execute();
@@ -143,13 +139,10 @@ class Database {
 
         foreach ($data as $key => $value) {
             $args[] = "$key = ?";
-        }
-        echo "----------<br>";
-        print_r($args);       
+        }      
     
         $sql = "UPDATE $table SET " . implode(',', $args) . " WHERE id = ?";
-        
-        echo "<br> Update Querey: " . $sql . "<br>";
+
         // $stmt = mysqli_prepare($mysqli, $sql);
         $stmt = $pdo->prepare($sql);
         // print_r($data);
@@ -170,11 +163,7 @@ class Database {
         // $types = str_repeat('s', count($data) + 1);
         // print_r($data);
         $params = array_values($data);
-        echo "<br>";
         $params[] = $id;
-        echo "<pre>";
-        print_r($params);
-        echo "</pre>";
 
         // mysqli_stmt_bind_param($stmt, $types, ...$params);
         for($idx = 0; $idx < count($params); $idx++) {
