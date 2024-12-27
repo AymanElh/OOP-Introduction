@@ -1,30 +1,31 @@
 <?php
 
-// require "../vendor/autoload.php";
+require_once __DIR__ .  "/../vendor/autoload.php";
 
-// use Dotenv\Dotenv;
+use Dotenv\Dotenv;
 
-// $dotenv = Dotenv::createImmutable(dirname(__DIR__));
-// $dotenv->load();
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
 
 class Database {
-    // private $DB_HOST = DB_HOST;
-    // private $DB_USER = DB_USER;
-    // private $DB_PASS = DB_PASS;
-    // private $DB_NAME = DB_NAME;
-
-    private $db_host = "localhost";
-    private $db_user = "root";
-    private $db_pass = "";
-    private $db_name = "FUT_Champions";
-
+    private $DB_HOST;
+    private $DB_USER;
+    private $DB_PASS;
+    private $DB_NAME;
     private $conn;
+
+    function __construct() {
+        $this->DB_HOST = $_ENV['DB_HOST'];
+        $this->DB_USER = $_ENV['DB_USER'];
+        $this->DB_PASS = $_ENV['DB_PASS'];
+        $this->DB_NAME = $_ENV['DB_NAME'];
+    }
 
     function connect() {
         $this->conn = NULL;
 
         try {
-            $this->conn = new PDO("mysql:host=" . $this->db_host . ";dbname=" . $this->db_name, $this->db_user, $this->db_pass);
+            $this->conn = new PDO("mysql:host=" . $this->DB_HOST . ";dbname=" . $this->DB_NAME, $this->DB_USER, $this->DB_PASS);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             echo "Connection successfull <br>";
         } catch (PDOException $e) {
