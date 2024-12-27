@@ -55,8 +55,4 @@ Object-Oriented Programming (OOP) is a programming paradigm that organizes code 
 2. Configure your database credentials in `config/db.php`.
 3. Open `index.php` in a browser to view, add, update, or delete player data and see it rendered dynamically in a DataTables table.
 
-## Future Enhancements
-- Add user authentication for secure operations.
-- Include advanced features like file uploads for player images.
-- Extend the project with API endpoints for integration with other systems.
 
