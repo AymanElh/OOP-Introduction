@@ -28,7 +28,7 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             echo "Connection successfull <br>";
         } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage() . "<br>";
+            die("Connection failed: " . $e->getMessage());
         }
 
         // try {
@@ -39,7 +39,7 @@ class Database {
         return $this->conn;
     }
 
-    static function insertRecord($pdo, $table, $data) {
+    public static function insertRecord($pdo, $table, $data) {
         // Use prepared statements to prevent SQL injection
         $columns = implode(',', array_keys($data));
         $values = implode(',', array_fill(0, count($data), '?'));
@@ -50,7 +50,7 @@ class Database {
         $stmt = $pdo->prepare($sql);
     
         if (!$stmt) {
-            die("Error in prepared statement: " . mysqli_error($mysqli));
+            die("Error in prepared statement: " . $pdo->errorInfo());
         }
 
         $types = "";
@@ -82,7 +82,7 @@ class Database {
     }
 
 
-    static function selectRecords($pdo, $table, $columns = "*", $where = null) {
+    public static function selectRecords($pdo, $table, $columns = "*", $where = null) {
         // Use prepared statements to prevent SQL injection
         $sql = "SELECT $columns FROM $table";
     
@@ -94,21 +94,14 @@ class Database {
         // $stmt = mysqli_prepare($mysqli, $sql);
         $stmt = $pdo->prepare($sql);
     
-        if (!$stmt) {
+        if (!$stmt->execute()) {
             die("Error in prepared statement: " . $stmt->errorInfo());
         }
     
         // Execute the prepared statement
         // mysqli_stmt_execute($stmt);
-        echo "<br>";
-        print_r($stmt);
-        $result = $stmt->execute();
 
-        if(!$result) {
-            die("Error executint query");
-        }
-
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  
+        $data = $stmt->fetchAll();  
         // Get the result set
         // $result = mysqli_stmt_get_result($stmt);
         // Close the statement
@@ -116,22 +109,20 @@ class Database {
         return $data;
     }
 
-    static function deleteRecord($pdo, $table, $id) {
+    public static function deleteRecord($pdo, $table, $id) {
         // Use prepared statements to prevent SQL injection
         $sql = "DELETE FROM $table WHERE id = ?";
-        print_r("Delete record: " . $sql . "<br>");
         // $stmt = mysqli_prepare($mysqli, $sql);
         $stmt = $pdo->prepare($sql);
     
         if (!$stmt) {
-            die("Error in prepared statement: " . $stmt->errorInfo($pdo));
+            die("Error in prepared statement: " . $stmt->errorInfo());
         }
     
         // Bind parameters to the prepared statement
         // mysqli_stmt_bind_param($stmt, 'i', $id);
         
         $stmt->bindParam(1, $id, PDO::PARAM_INT);
-        print_r($stmt);
         // Execute the prepared statement
         // $result = mysqli_stmt_execute($stmt);
         $result = $stmt->execute();
@@ -142,20 +133,19 @@ class Database {
         return $result;
     }
 
-    static function updateRecord($pdo, $table, $data, $id) {
+    public static function updateRecord($pdo, $table, $data, $id) {
         // Use prepared statements to prevent SQL injection
         $args = array();
-    
+
         foreach ($data as $key => $value) {
             $args[] = "$key = ?";
-        }       
+        }      
     
         $sql = "UPDATE $table SET " . implode(',', $args) . " WHERE id = ?";
-        
-        echo "<br> Update Querey: " . $sql . "<br>";
+
         // $stmt = mysqli_prepare($mysqli, $sql);
         $stmt = $pdo->prepare($sql);
-    
+        // print_r($data);
         if (!$stmt) {
             die("Error in prepared statement: " . $stmt->errorInfo($pdo));
         }
@@ -173,9 +163,7 @@ class Database {
         // $types = str_repeat('s', count($data) + 1);
         // print_r($data);
         $params = array_values($data);
-        echo "<br>";
         $params[] = $id;
-        // print_r($params);
 
         // mysqli_stmt_bind_param($stmt, $types, ...$params);
         for($idx = 0; $idx < count($params); $idx++) {
@@ -191,5 +179,6 @@ class Database {
     
         return $result;
     }
+
 }
 
