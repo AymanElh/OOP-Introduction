@@ -92,8 +92,11 @@ class Database {
         }
     
         // Execute the prepared statement
-        mysqli_stmt_execute($stmt);
-    
+        // mysqli_stmt_execute($stmt);
+        echo "<br>";
+        print_r($stmt);
+
+        $data = $stmt->fetchAll();  
         // Get the result set
         $result = mysqli_stmt_get_result($stmt);
     
@@ -106,16 +109,19 @@ class Database {
     static function deleteRecord($mysqli, $table, $id) {
         // Use prepared statements to prevent SQL injection
         $sql = "DELETE FROM $table WHERE id = ?";
-    
-        $stmt = mysqli_prepare($mysqli, $sql);
+        print_r("Delete record: " . $sql . "<br>");
+        // $stmt = mysqli_prepare($mysqli, $sql);
+        $stmt = $pdo->prepare($sql);
     
         if (!$stmt) {
             die("Error in prepared statement: " . mysqli_error($mysqli));
         }
     
         // Bind parameters to the prepared statement
-        mysqli_stmt_bind_param($stmt, 'i', $id);
-    
+        // mysqli_stmt_bind_param($stmt, 'i', $id);
+        
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        print_r($stmt);
         // Execute the prepared statement
         $result = mysqli_stmt_execute($stmt);
     
@@ -132,11 +138,15 @@ class Database {
         foreach ($data as $key => $value) {
             $args[] = "$key = ?";
         }
+        echo "----------<br>";
+        print_r($args);       
     
         $sql = "UPDATE $table SET " . implode(',', $args) . " WHERE id = ?";
-    
-        $stmt = mysqli_prepare($mysqli, $sql);
-    
+        
+        echo "<br> Update Querey: " . $sql . "<br>";
+        // $stmt = mysqli_prepare($mysqli, $sql);
+        $stmt = $pdo->prepare($sql);
+        // print_r($data);
         if (!$stmt) {
             die("Error in prepared statement: " . mysqli_error($mysqli));
         }
@@ -145,7 +155,14 @@ class Database {
         $types = str_repeat('s', count($data) + 1);
         $params = array_values($data);
         $params[] = $id;
-        mysqli_stmt_bind_param($stmt, $types, ...$params);
+        echo "<pre>";
+        print_r($params);
+        echo "</pre>";
+
+        // mysqli_stmt_bind_param($stmt, $types, ...$params);
+        for($idx = 0; $idx < count($params); $idx++) {
+            $stmt->bindValue($idx + 1, $params[$idx]);
+        }
     
         // Execute the prepared statement
         $result = mysqli_stmt_execute($stmt);
