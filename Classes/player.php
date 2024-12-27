@@ -32,11 +32,11 @@ class Player {
         //     return NULL;
         // }
 
-        print_r($countryID);
-        if($countryID) {
-            return $countryID;
+        // print_r($countryID);
+        if ($countryID && isset($countryID[0]['id'])) {
+            return (int) $countryID[0]['id']; // Return the 'id' as an integer
         } else {
-            return NULL;
+            return NULL; // Return NULL if no result was found
         }
         
     }
@@ -52,10 +52,10 @@ class Player {
         // } else {
         //     return NULL;
         // }
-        if($clubID) {
-            return $clubID;
+        if ($clubID && isset($clubID[0]['id'])) {
+            return (int) $clubID[0]['id']; // Return the 'id' as an integer
         } else {
-            return NULL;
+            return NULL; // Return NULL if no result was found
         }
     }
 
