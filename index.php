@@ -3,11 +3,25 @@
 require_once "./config/db.php";
 require_once "./classes/player.php";
 
-$conn = (new Database())-> connect();
+$conn = (new Database())->connect();
 
-if(!$conn) {
+if (!$conn) {
     die("Connection failed");
 }
+
+$player = new Player($conn);
+
+/*** Create a new player  ****/
+// $player->firstName = "Ahmed";
+// $player->lastName = "ali";
+// $player->countryName = "Egypt";
+// $player->clubName = "FC Barcelone";
+// $player->rating = 99;
+// $player->position = "RW";
+
+// $player->create();
+
+// $player->delete(33);
 
 
 $players = $player->showAllPlayers();
@@ -17,6 +31,7 @@ $players = $player->showAllPlayers();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,39 +42,42 @@ $players = $player->showAllPlayers();
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>FUT Champions Players</h1>
-    <table id="playersTable" class="display">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Country</th>
-                <th>Club</th>
-                <th>Rating</th>
-                <th>Position</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($players as $player): ?>
-                <tr>
-                    <td><?= htmlspecialchars($player['id']) ?></td>
-                    <td><?= htmlspecialchars($player['first_name']) ?></td>
-                    <td><?= htmlspecialchars($player['last_name']) ?></td>
-                    <td><?= htmlspecialchars($player['country_id']) ?></td>
-                    <td><?= htmlspecialchars($player['club_id']) ?></td>
-                    <td><?= htmlspecialchars($player['rating']) ?></td>
-                    <td><?= htmlspecialchars($player['position']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
 
+<body>
+    <h1 class="font-bold text-3xl text-blue-500 text-center">FUT Champions Players</h1>
+    <main>
+        <table id="playersTable" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Country</th>
+                    <th>Club</th>
+                    <th>Rating</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($players as $player): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($player['player_id']) ?></td>
+                        <td><?= htmlspecialchars($player['first_name']) ?></td>
+                        <td><?= htmlspecialchars($player['last_name']) ?></td>
+                        <td><?= htmlspecialchars($player['country_name']) ?></td>
+                        <td><?= htmlspecialchars($player['club_name']) ?></td>
+                        <td><?= htmlspecialchars($player['rating']) ?></td>
+                        <td><?= htmlspecialchars($player['position']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </main>
     <script>
         $(document).ready(function() {
             $('#playersTable').DataTable();
         });
     </script>
 </body>
+
 </html>

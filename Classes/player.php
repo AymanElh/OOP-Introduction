@@ -114,9 +114,22 @@ class Player {
     }
 
     function showAllPlayers() {
-        $result = Database::selectRecords($this->conn, $this->table);
+        // $result = Database::selectRecords($this->conn, $this->table);
         // $allPlayers = mysqli_fetch_all($result);
-        return $result;
+
+        $query = "SELECT players.id AS player_id, first_name, last_name, countries.name AS country_name, clubs.name AS club_name, rating, position 
+        FROM players
+        JOIN clubs ON clubs.id = players.club_id
+        JOIN countries ON countries.id = players.country_id";
+
+        $stmt = $this->conn->prepare($query);
+        if(!$stmt->execute()) {
+            die("Error on preparing stmt: " . $stmt->errorInfo());
+        }
+
+        $data = $stmt->fetchAll();
+
+        return $data;
     }
 
 }
