@@ -26,7 +26,7 @@ class Player {
         // echo $countryID;
 
         if($row = mysqli_fetch_assoc($countryID)) {
-            echo $row['id'];
+            // echo $row['id'];
             return $row['id'];
         } else {
             return NULL;
@@ -40,7 +40,7 @@ class Player {
         // echo $clubID;
 
         if($row = mysqli_fetch_assoc($clubID)) {
-            echo $row['id'];
+            // echo $row['id'];
             return $row['id'];
         } else {
             return NULL;
@@ -77,5 +77,29 @@ class Player {
         }
     }
 
+    function update($id) {
+        $table = "players";
+
+        $country_id = $this->getCountryId($this->conn, $this->countryName);
+        $club_id = $this->getClubId($this->conn, $this->clubName);
+
+
+        $data = [
+            "first_name" => $this->firstName,
+            "last_name" => $this->lastName,
+            "country_id" => $country_id,
+            "club_id" => $club_id,
+            "rating" => $this->rating,
+            "position" => $this->position
+        ];
+
+        $result = Database::updateRecord($this->conn, $table, $data, $id);
+
+        if($result) {
+            echo "Player updated successfuly";
+        } else {
+            echo "Update failed";
+        }
+    }
 
 }

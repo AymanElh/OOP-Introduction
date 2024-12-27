@@ -45,7 +45,7 @@ class Database {
         $values = implode(',', array_fill(0, count($data), '?'));
     
         $sql = "INSERT INTO $table($columns) VALUES($values)";
-        echo "$sql";
+        // echo "$sql";
         $stmt = mysqli_prepare($mysqli, $sql);
     
         if (!$stmt) {
@@ -82,7 +82,7 @@ class Database {
     
         if ($where !== null) {
             $sql .= " WHERE $where";
-            echo $sql;
+            // echo $sql;
         }
     
         $stmt = mysqli_prepare($mysqli, $sql);
@@ -125,16 +125,19 @@ class Database {
         return $result;
     }
 
-    function updateRecord($mysqli, $table, $data, $id) {
+    static function updateRecord($mysqli, $table, $data, $id) {
         // Use prepared statements to prevent SQL injection
         $args = array();
     
         foreach ($data as $key => $value) {
             $args[] = "$key = ?";
         }
+
+        print_r($args);
     
         $sql = "UPDATE $table SET " . implode(',', $args) . " WHERE id = ?";
-    
+        
+        echo "<br> Update Querey: " . $sql . "<br>";
         $stmt = mysqli_prepare($mysqli, $sql);
     
         if (!$stmt) {
@@ -142,9 +145,22 @@ class Database {
         }
     
         // Bind parameters to the prepared statement
-        $types = str_repeat('s', count($data) + 1);
+        $types = "";
+        foreach($data as $value) {
+            if(is_int($value)) {
+                $types .= 'i';
+            } else if (is_string($value)) {
+                $types .= 's';
+            }
+        }
+        $types .= 's';
+        // $types = str_repeat('s', count($data) + 1);
+        print_r($data);
         $params = array_values($data);
+        echo "<br>";
         $params[] = $id;
+        print_r($params);
+
         mysqli_stmt_bind_param($stmt, $types, ...$params);
     
         // Execute the prepared statement
